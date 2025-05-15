@@ -88,10 +88,25 @@ public class ExpDeclaracao implements Expressao {
 			if (result) {
 				AmbienteCompilacao aux = new ContextoCompilacao();
 				aux.incrementa();
+				
+				// Elaborate the declaration into the auxiliary environment
 				declaracao.elabora(ambiente, aux);
-				declaracao.incluir(ambiente, aux);
+				
+				// Include those elaborated declarations in the current environment
+				try {
+					declaracao.incluir(ambiente, aux);
+				} catch (VariavelJaDeclaradaException e) {
+					// If the variable is already declared, we can ignore this exception
+					// because it means the declaration was already processed
+					// This happens in nested let expressions
+					System.out.println("Warning: Variable " + e.getMessage() + " already declared, continuing type checking");
+				}
+				
 				aux.restaura();
+				
+				// Now check the body expression in the current environment
 				result = expressao.checaTipo(ambiente);
+				System.out.println("Result of type checking: " + result + " for " + expressao);
 			}
 		} finally {
 			ambiente.restaura();

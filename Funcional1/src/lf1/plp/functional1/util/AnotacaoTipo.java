@@ -10,10 +10,6 @@ package lf1.plp.functional1.util;
 
 import lf1.plp.expressions1.util.Tipo;
 
-/**
- * Esta classe representa o tipo de uma fun��o.
- * 
- */
 public class AnotacaoTipo {
 
 	private Tipo tipo;

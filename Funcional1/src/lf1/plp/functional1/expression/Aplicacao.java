@@ -20,6 +20,7 @@ import lf1.plp.expressions2.memory.IdentificadorNaoDeclaradoException;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf1.plp.functional1.memory.AmbienteExecucaoFuncional;
+import lf1.plp.functional1.util.AnotacaoTipo;
 import lf1.plp.functional1.util.DefFuncao;
 import lf1.plp.functional1.util.TipoFuncao;
 
@@ -141,14 +142,15 @@ public class Aplicacao implements Expressao {
 	private Map<Id, Valor> resolveParametersBindings(AmbienteExecucao ambiente,
 			DefFuncao funcao) throws VariavelNaoDeclaradaException,
 			VariavelJaDeclaradaException {
-		List<Id> parametrosId = funcao.getListaId();
+		List<Map.Entry<AnotacaoTipo, Id>> parametrosId = funcao.getListaId();
 		List<? extends Expressao> expressoesValorReal = argsExpressao;
 
 		Map<Id, Valor> mapIdValor = new HashMap<Id, Valor>();
 
 		Iterator<? extends Expressao> iterExpressoesValor = expressoesValorReal
 				.iterator();
-		for (Id id : parametrosId) {
+		for (Map.Entry<AnotacaoTipo, Id> entry : parametrosId) {
+			Id id = entry.getValue();
 			Expressao exp = iterExpressoesValor.next();
 			Valor valorReal = exp.avaliar(ambiente);
 			mapIdValor.put(id, valorReal);

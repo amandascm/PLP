@@ -30,7 +30,7 @@ Com base nos princípios de flexibilidade e generalização, vamos adicionar tip
 **ExpUnaria** ::= ["-"](Funcional1/src/lf1/plp/expressions2/expression/ExpMenos.java) **Expressao**  
     | ["not"](Funcional1/src/lf1/plp/expressions2/expression/ExpNot.java) **Expressao**  
     | ["length"](Funcional1/src/lf1/plp/expressions2/expression/ExpLength.java) **Expressao** \
-    | "typeof" **Expressao**
+    | ["typeof"](Funcional1/src/lf1/plp/functional1/expression/ExpTypeOf.java) **Expressao**
 
 **ExpBinaria** ::= [**Expressao "+" Expressao**](Funcional1/src/lf1/plp/expressions2/expression/ExpSoma.java)
     | [**Expressao "-" Expressao**](Funcional1/src/lf1/plp/expressions2/expression/ExpSub.java)  
@@ -45,13 +45,13 @@ Com base nos princípios de flexibilidade e generalização, vamos adicionar tip
     | [**DecFuncao**](Funcional1/src/lf1/plp/functional1/declaration/DecFuncao.java)  
     | [**DecComposta**](Funcional1/src/lf1/plp/functional1/declaration/DecComposta.java)
 
-**DecVariavel** ::= AnotacaoTipo Id "=" Expressao
+**DecVariavel** ::= [AnotacaoTipo](Funcional1/src/lf1/plp/functional1/util/AnotacaoTipo.java) Id "=" Expressao
 
 **DecFuncao** ::= "fun" **ListId** "=" **Expressao**
 
 **DecComposta** ::= **DeclaracaoFuncional** "," **DeclaracaoFuncional**
 
-**ListId** ::= AnotacaoTipo **Id** | AnotacaoTipo **Id ListId**
+**ListId** ::= [AnotacaoTipo](Funcional1/src/lf1/plp/functional1/util/AnotacaoTipo.java) **Id** | [AnotacaoTipo](Funcional1/src/lf1/plp/functional1/util/AnotacaoTipo.java) **Id ListId**
 
 **Aplicacao** ::= **Id** "(" **ListExp** ")"
 
@@ -59,8 +59,8 @@ Com base nos princípios de flexibilidade e generalização, vamos adicionar tip
 
 **IfThenElse** ::= "if" **Expressao** "then" **Expressao** "else" **Expressao**
 
-**AnotacaoTipo** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) | TipoCustom
+**AnotacaoTipo** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) | [TipoCustom](Funcional1/src/lf1/plp/functional1/util/TipoCustom.java)
 
-**TipoCustom** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) "|" TipoPrimitivo
+**TipoCustom** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) "|" [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java)
 
 **TipoPrimitivo** ::= ["string" | "int" | "boolean"](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java)

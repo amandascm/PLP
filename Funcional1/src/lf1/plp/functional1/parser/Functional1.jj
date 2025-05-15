@@ -574,7 +574,7 @@ DeclaracaoFuncional PDeclFuncao() :
   Id id;
   Expressao expressao;
   DeclaracaoFuncional retorno;
-  List < Id > lista;
+  List <Map.Entry<AnotacaoTipo, Id>> lista;
 }
 {
   (
@@ -614,6 +614,7 @@ DeclaracaoFuncional PDeclFuncional() :
   | < LPAREN > decl = PDeclFuncional() < RPAREN >
   )
   {
+    System.out.println("PDeclFuncional=" + decl);
     return decl;
   }
 }

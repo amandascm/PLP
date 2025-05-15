@@ -2,6 +2,7 @@ package lf1.plp.functional1.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions2.expression.Expressao;
@@ -12,21 +13,28 @@ import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
 public class DefFuncao {
 
-	protected List<Id> argsId;
+	protected List<Map.Entry<AnotacaoTipo, Id>> argsId;
 
 	protected Expressao exp;
 
-	public DefFuncao(List<Id> argsId, Expressao exp) {
+	protected AnotacaoTipo tipoRetorno;
+
+	public DefFuncao(List<Map.Entry<AnotacaoTipo, Id>> argsId, Expressao exp, AnotacaoTipo tipoRetorno) {
 		this.argsId = argsId;
 		this.exp = exp;
+		this.tipoRetorno = tipoRetorno;
 	}
 
-	public List<Id> getListaId() {
+	public List<Map.Entry<AnotacaoTipo, Id>> getListaId() {
 		return argsId;
 	}
 
 	public Expressao getExp() {
 		return exp;
+	}
+
+	public AnotacaoTipo getTipoRetorno() {
+		return tipoRetorno;
 	}
 
 	/**
@@ -57,13 +65,21 @@ public class DefFuncao {
 
 		// Usa uma inst�ncia de TipoQualquer para cada par�metro formal.
 		// Essa inst�ncia ser� inferida durante o getTipo de exp.
-		for (Id id : argsId) {
-			ambiente.map(id, new TipoPolimorfico());
+		for (Map.Entry<AnotacaoTipo, Id> entry : argsId) {
+			Id id = entry.getValue();
+			Tipo tipo = entry.getKey().getTipo();
+			if (tipo != null) {
+				ambiente.map(id, tipo);
+			} else {
+				ambiente.map(id, new TipoPolimorfico());
+			}
 		}
-
 		// Chama o checa tipo da express�o para veririficar se o corpo da
 		// fun��o est� correto. Isto ir� inferir o tipo dos par�metros.
-		boolean result = exp.checaTipo(ambiente);
+		boolean result = exp.checaTipo(ambiente) && tipoRetorno.getTipo().intersecao(exp.getTipo(ambiente)) != null;
+		if (!result) {
+			System.out.println("Erro de tipo na funcao: " + exp.toString());
+		}
 
 		ambiente.restaura();
 
@@ -89,27 +105,35 @@ public class DefFuncao {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		ambiente.incrementa();
 
-		for (Id id : argsId) {
-			ambiente.map(id, new TipoPolimorfico());
+
+		for (Map.Entry<AnotacaoTipo, Id> entry : argsId) {
+			Id id = entry.getValue();
+			Tipo tipo = entry.getKey().getTipo();
+			if (tipo != null) {
+				ambiente.map(id, tipo);
+			} else {
+				ambiente.map(id, new TipoPolimorfico());
+			}
 		}
 
 		// Usa o checaTipo apenas para inferir o tipo dos par�metros.
 		// Pois o getTipo da express�o pode simplismente retornar o
 		// tipo, por exemplo, no caso de uma express�o bin�ria ou un�ria
 		// os tipos sempre s�o bem definidos (Booleano, Inteiro ou String).
-		exp.checaTipo(ambiente);
+		// exp.checaTipo(ambiente);
 
 		// Comp�e o tipo desta fun��o do resultado para o primeiro par�metro.
-		Tipo result = exp.getTipo(ambiente);
+		// Tipo result = exp.getTipo(ambiente);
 
 		// Obt�m o tipo inferido de cada par�metro.
 		List<Tipo> params = new ArrayList<Tipo>(getAridade());
 		Tipo argTipo;
 		for (int i = 0; i < getAridade(); i++) {
-			argTipo = ((TipoPolimorfico) ambiente.get(argsId.get(i))).inferir();
+			Id id = argsId.get(i).getValue();
+			argTipo = ambiente.get(id);
 			params.add(argTipo);
 		}
-		result = new TipoFuncao(params, result);
+		Tipo result = new TipoFuncao(params, tipoRetorno.getTipo());
 
 		ambiente.restaura();
 
@@ -117,12 +141,12 @@ public class DefFuncao {
 	}
 	
 	public DefFuncao clone() {
-		List<Id> novaLista = new ArrayList<Id>(this.argsId.size());
+		List<Map.Entry<AnotacaoTipo, Id>> novaLista = new ArrayList<Map.Entry<AnotacaoTipo, Id>>(this.argsId.size());
 		
-		for (Id id : this.argsId){
-			novaLista.add(id.clone());
+		for (Map.Entry<AnotacaoTipo, Id> entry : argsId) {
+			novaLista.add(entry);
 		}
 		
-		return new DefFuncao(novaLista, this.exp.clone());
+		return new DefFuncao(novaLista, this.exp.clone(), this.tipoRetorno.clone());
 	}
 }

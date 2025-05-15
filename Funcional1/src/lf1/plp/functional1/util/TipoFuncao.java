@@ -172,7 +172,7 @@ public class TipoFuncao implements Tipo {
 			tipoArg = valorReal.getTipo(ambiente);
 			Tipo tipoDom = it.next();
 
-			result &= tipoArg.eIgual(tipoDom);
+			result &= tipoDom.intersecao(tipoArg) != null; // tipoArg.eIgual(tipoDom);
 		}
 		return result;
 	}

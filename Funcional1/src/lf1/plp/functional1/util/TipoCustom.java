@@ -17,43 +17,16 @@ import lf1.plp.expressions2.memory.AmbienteExecucao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-/**
- * Esta classe representa o tipo de uma fun��o.
- * 
- */
 public class TipoCustom implements Tipo, Valor {
 
 	private TipoPrimitivo tipo1;
 	private TipoPrimitivo tipo2;
 
-	/**
-	 * O tipo do dom�nio da fun��o.
-	 */
-	// private List<Tipo> dominio;
-
-	/**
-	 * O tipo da imagem (o tipo de retorno) da fun��o.
-	 */
-	// private Tipo imagem;
-
-	/**
-	 * Construtor da classe que representa um tipo fun��o (T1 x ... x Tn -> T).
-	 * 
-	 * @param dominio
-	 *            A lista dos tipos do dom�nio da fun��o (T1 x ... x Tn).
-	 * @param imagem
-	 *            O tipo da imagem da fun��o (T).
-	 */
 	public TipoCustom(TipoPrimitivo tipo1, TipoPrimitivo tipo2) {
 		this.tipo1 = tipo1;
 		this.tipo2 = tipo2;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see lf1.plp.expressions1.util.Tipo#getNome()
-	 */
 	public String getNome() {
 		return String.format("%s | %s", tipo1.getNome(), tipo2.getNome());
 	}
@@ -82,11 +55,6 @@ public class TipoCustom implements Tipo, Valor {
 		return tipo2;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see lf1.plp.expressions1.util.Tipo#eIgual(lf1.plp.expressions1.util.Tipo)
-	 */
 	public boolean eIgual(Tipo tipo) {
 		if (tipo instanceof TipoCustom) {
 			TipoCustom tipoCasted = (TipoCustom) tipo;
@@ -105,16 +73,13 @@ public class TipoCustom implements Tipo, Valor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see lf1.plp.expressions1.util.Tipo#intersecao(lf1.plp.expressions1.util.Tipo)
-	 */
 	public Tipo intersecao(Tipo outroTipo) {
-		if (outroTipo.eIgual(getTipo1()) || outroTipo.eIgual(getTipo2()))
+		if (outroTipo != null && (outroTipo.eIgual(this) || outroTipo.eIgual(getTipo1()) || outroTipo.eIgual(getTipo2()))) {
 			return outroTipo;
-		else
+		}
+		else {
 			return null;
+		}
 	}
 
 	@Override

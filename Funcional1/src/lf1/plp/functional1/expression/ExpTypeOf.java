@@ -14,18 +14,8 @@ import lf1.plp.expressions2.memory.AmbienteExecucao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-/**
- * Um objeto desta classe representa uma Expressao de Negacao logica.
- */
 public class ExpTypeOf extends ExpUnaria{
 
-	/**
-	 * Controi uma Expressao de negacao logica com expressao
-	 * especificada.
-	 * 
-	 * @param exp Expressao a ser negada. Assume-se que sua avaliacao resulta
-	 *        em <code>ValorBooleano</code>.
-	 */
 	public ExpTypeOf( Expressao exp) {
 		super(exp, "typeof");
 	}
@@ -50,9 +40,6 @@ public class ExpTypeOf extends ExpUnaria{
 			tipoStr = "boolean";
 		} else if (valor instanceof ValorString) {
 			tipoStr = "string";
-		} else if (valor instanceof Id) {
-			// For custom types (represented by Ids), return the Id name
-			tipoStr = valor.toString();
 		}
 		
 		return new ValorString(tipoStr);

@@ -27,9 +27,9 @@ public class DecFuncao implements DeclaracaoFuncional {
 
 	private AnotacaoTipo anotacaoTipo;
 
-	public DecFuncao(AnotacaoTipo tipo, Id idFun, List<Id> argsId, Expressao exp) {
+	public DecFuncao(AnotacaoTipo tipo, Id idFun, List<Map.Entry<AnotacaoTipo, Id>> argsId, Expressao exp) {
 		this.id = idFun;
-		this.funcao = new DefFuncao(argsId, exp);
+		this.funcao = new DefFuncao(argsId, exp, tipo);
 		this.anotacaoTipo = tipo;
 	}
 
@@ -41,7 +41,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 		return anotacaoTipo.getTipo();
 	}
 
-	public List<Id> getListaId() {
+	public List<Map.Entry<AnotacaoTipo, Id>> getListaId() {
 		return funcao.getListaId();
 	}
 
@@ -69,7 +69,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 	 */
 	@Override
 	public String toString() {
-		return String.format("fun %s (%s) = %s", id, listToString(funcao
+		return String.format("fun %s %s (%s) = %s", funcao.getTipoRetorno().toString(), id, listToString(funcao
 				.getListaId(), ","), funcao.getExp());
 	}
 
@@ -90,13 +90,13 @@ public class DecFuncao implements DeclaracaoFuncional {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		ambiente.incrementa();
 
-		List<Tipo> params = new ArrayList<Tipo>(getAridade());
-		for (int i = 0; i < getAridade(); i++) {
-			params.add(new TipoPolimorfico());
-		}
-		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
+		// List<Tipo> params = new ArrayList<Tipo>(getAridade());
+		// for (int i = 0; i < getAridade(); i++) {
+		// 	params.add(new TipoPolimorfico());
+		// }
+		// Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
 		// Mapeia a pr�pria fun��o no ambiente para permitir recurs�o.
-		ambiente.map(id, tipo);
+		ambiente.map(id, funcao.getTipo(ambiente));
 
 		boolean result = funcao.checaTipo(ambiente);
 		ambiente.restaura();
@@ -122,16 +122,17 @@ public class DecFuncao implements DeclaracaoFuncional {
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
 		amb.incrementa();
 
-		List<Tipo> params = new ArrayList<Tipo>(getAridade());
-		for (int i = 0; i < getAridade(); i++) {
-			params.add(new TipoPolimorfico());
-		}
-		Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
-		amb.map(id, tipo);
+		// List<Tipo> params = new ArrayList<Tipo>(getAridade());
+		// for (int i = 0; i < getAridade(); i++) {
+		// 	params.add(new TipoPolimorfico());
+		// }
+		// Tipo tipo = new TipoFuncao(params, new TipoPolimorfico());
+		// amb.map(id, tipo);
 
-		Tipo result = funcao.getTipo(amb);
+		Tipo tipo = funcao.getTipo(amb);
+		amb.map(id, tipo);
 		amb.restaura();
-		return result;
+		return tipo;
 	}
 
 	public DecFuncao clone() {
