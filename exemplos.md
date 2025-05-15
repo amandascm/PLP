@@ -4,7 +4,7 @@
 Use these examples as inputs to our Applet:
 
 ```
-# Erro de tipos -> TO BE FIXED
+# Ok
 let fun int|string postProcess int|string x =
 	let fun int mult int x int y =
 		if (x == 0) then (0)
