@@ -10,14 +10,8 @@ package lf1.plp.functional1.util;
 
 import lf1.plp.expressions1.util.Tipo;
 import lf1.plp.expressions1.util.TipoPrimitivo;
-import lf1.plp.expressions2.expression.Expressao;
-import lf1.plp.expressions2.expression.Valor;
-import lf1.plp.expressions2.memory.AmbienteCompilacao;
-import lf1.plp.expressions2.memory.AmbienteExecucao;
-import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
-import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 
-public class TipoCustom implements Tipo, Valor {
+public class TipoCustom implements Tipo {
 
 	private TipoPrimitivo tipo1;
 	private TipoPrimitivo tipo2;
@@ -89,26 +83,5 @@ public class TipoCustom implements Tipo, Valor {
 
 	public TipoCustom clone() {
 		return new TipoCustom(tipo1, tipo2);
-	}
-
-	@Override
-	public Valor avaliar(AmbienteExecucao amb) throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return this;
-	}
-
-	@Override
-	public boolean checaTipo(AmbienteCompilacao amb)
-			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return this.eValido();
-	}
-
-	@Override
-	public Tipo getTipo(AmbienteCompilacao amb) throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return this;
-	}
-
-	@Override
-	public Expressao reduzir(AmbienteExecucao ambiente) {
-		return this;
 	}
 }
