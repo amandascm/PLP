@@ -50,6 +50,7 @@ public class TipoCustom implements Tipo {
 	}
 
 	public boolean eIgual(Tipo tipo) {
+		System.out.println("TipoCustom: " + this.getNome() + " == " + tipo.getNome());
 		if (tipo instanceof TipoCustom) {
 			TipoCustom tipoCasted = (TipoCustom) tipo;
 			boolean ret = false;
@@ -61,8 +62,10 @@ public class TipoCustom implements Tipo {
 					}
 				}
 			}
+			System.out.println("TipoCustom: " + this.getNome() + " == " + tipoCasted.getNome() + " = " + ret);
 			return ret;
 		} else {
+			System.out.println("TipoCustom: " + this.getNome() + " == " + tipo.getNome() + " = FALSE");
 			return false;
 		}
 	}

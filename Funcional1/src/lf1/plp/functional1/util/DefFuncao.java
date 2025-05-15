@@ -78,7 +78,8 @@ public class DefFuncao {
 		// fun��o est� correto. Isto ir� inferir o tipo dos par�metros.
 		boolean result = exp.checaTipo(ambiente) && tipoRetorno.getTipo().intersecao(exp.getTipo(ambiente)) != null;
 		if (!result) {
-			System.out.println("Erro de tipo na funcao: " + exp.toString());
+			System.out.println("Erro de tipo na funcao: " + exp.toString() + " com tipo: " + exp.getTipo(ambiente) + 
+					" e retorno: " + tipoRetorno.getTipo());
 		}
 
 		ambiente.restaura();

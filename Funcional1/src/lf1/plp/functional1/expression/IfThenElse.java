@@ -98,6 +98,15 @@ public class IfThenElse implements Expressao {
 	 */
 	public Tipo getTipo(AmbienteCompilacao amb)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
+
+		if (then.getTipo(amb).intersecao(elseExpressao.getTipo(amb)) != null) {
+			return then.getTipo(amb).intersecao(elseExpressao.getTipo(amb));
+		}
+		else if (elseExpressao.getTipo(amb).intersecao(then.getTipo(amb)) != null) {
+			return elseExpressao.getTipo(amb).intersecao(then.getTipo(amb));
+		} else if (then.getTipo(amb) instanceof TipoCustom || elseExpressao.getTipo(amb) instanceof TipoCustom) {
+			return null;
+		}
 		return new TipoCustom(then.getTipo(amb), elseExpressao.getTipo(amb)); //then.getTipo(amb).intersecao(elseExpressao.getTipo(amb));
 	}
 

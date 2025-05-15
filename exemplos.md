@@ -18,6 +18,18 @@ in postProcess(5)
 
 ```
 # Ok
+let fun int|string formatData int|string input =
+if typeof input == "string"
+then
+"Text: " ++ input
+else
+input
+in
+formatData("hello")
+```
+
+```
+# Ok
 let int|string value = 42 in value
 ```
 
