@@ -78,7 +78,12 @@ public class DecVariavel implements DeclaracaoFuncional {
 	 */
 	public boolean checaTipo(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return expressao.checaTipo(ambiente);
+		if (expressao.checaTipo(ambiente)) {
+			Tipo tipoExpressao = expressao.getTipo(ambiente);
+			return anotacaoTipo.getTipo().intersecao(tipoExpressao) != null;
+		} else {
+			return false;
+		}
 	}
 
 	public DecVariavel clone() {
