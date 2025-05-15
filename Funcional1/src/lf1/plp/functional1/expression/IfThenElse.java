@@ -80,7 +80,7 @@ public class IfThenElse implements Expressao {
 		Tipo thenTipo = then.getTipo(amb);
 		Tipo elseTipo = elseExpressao.getTipo(amb);
 
-		return ret && condicaoTipo.eBooleano() && thenTipo.eIgual(elseTipo);
+		return ret && condicaoTipo.eBooleano(); // && thenTipo.eIgual(elseTipo);
 	}
 
 	/**
