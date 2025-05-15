@@ -8,6 +8,7 @@ import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.AmbienteExecucao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import lf1.plp.functional1.util.TipoCustom;
 
 public class IfThenElse implements Expressao {
 
@@ -97,7 +98,7 @@ public class IfThenElse implements Expressao {
 	 */
 	public Tipo getTipo(AmbienteCompilacao amb)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return then.getTipo(amb).intersecao(elseExpressao.getTipo(amb));
+		return new TipoCustom(then.getTipo(amb), elseExpressao.getTipo(amb)); //then.getTipo(amb).intersecao(elseExpressao.getTipo(amb));
 	}
 
 	@Override

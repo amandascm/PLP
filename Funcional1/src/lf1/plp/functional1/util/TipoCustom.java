@@ -13,10 +13,10 @@ import lf1.plp.expressions1.util.TipoPrimitivo;
 
 public class TipoCustom implements Tipo {
 
-	private TipoPrimitivo tipo1;
-	private TipoPrimitivo tipo2;
+	private Tipo tipo1;
+	private Tipo tipo2;
 
-	public TipoCustom(TipoPrimitivo tipo1, TipoPrimitivo tipo2) {
+	public TipoCustom(Tipo tipo1, Tipo tipo2) {
 		this.tipo1 = tipo1;
 		this.tipo2 = tipo2;
 	}
