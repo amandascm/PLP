@@ -14,6 +14,7 @@ import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf1.plp.functional1.memory.AmbienteExecucaoFuncional;
+import lf1.plp.functional1.util.AnotacaoTipo;
 import lf1.plp.functional1.util.DefFuncao;
 import lf1.plp.functional1.util.TipoFuncao;
 import lf1.plp.functional1.util.TipoPolimorfico;
@@ -24,13 +25,20 @@ public class DecFuncao implements DeclaracaoFuncional {
 
 	private DefFuncao funcao;
 
-	public DecFuncao(Id idFun, List<Id> argsId, Expressao exp) {
+	private AnotacaoTipo anotacaoTipo;
+
+	public DecFuncao(AnotacaoTipo tipo, Id idFun, List<Id> argsId, Expressao exp) {
 		this.id = idFun;
 		this.funcao = new DefFuncao(argsId, exp);
+		this.anotacaoTipo = tipo;
 	}
 
 	public Id getId() {
 		return id;
+	}
+
+	public Tipo getTipo() {
+		return anotacaoTipo.getTipo();
 	}
 
 	public List<Id> getListaId() {
@@ -128,7 +136,7 @@ public class DecFuncao implements DeclaracaoFuncional {
 
 	public DecFuncao clone() {
 		DefFuncao aux = this.funcao.clone();
-		return new DecFuncao(this.id.clone(), aux.getListaId(), aux.getExp());
+		return new DecFuncao(this.anotacaoTipo.clone(), this.id.clone(), aux.getListaId(), aux.getExp());
 	}
 
 	public void elabora(AmbienteCompilacao amb, AmbienteCompilacao aux) throws VariavelJaDeclaradaException {

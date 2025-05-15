@@ -1,28 +1,19 @@
 package lf1.plp.functional1.declaration;
 
-
-import java.util.Map;
-
-import lf1.plp.expressions1.util.Tipo;
-import lf1.plp.expressions2.expression.Expressao;
 import lf1.plp.expressions2.expression.Id;
-import lf1.plp.expressions2.expression.Valor;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
 import lf1.plp.functional1.memory.AmbienteExecucaoFuncional;
-import lf1.plp.functional1.util.AnotacaoTipo;
-import lf1.plp.functional1.util.DefFuncao;
+import lf1.plp.functional1.util.TipoCustom;
 
-public class DecVariavel implements DeclaracaoFuncional {
-	private AnotacaoTipo anotacaoTipo;
+public class DecTipo implements DeclaracaoFuncional {
 	private Id id;
-	private Expressao expressao;
+	private TipoCustom tipoCustom;
 
-	public DecVariavel(AnotacaoTipo anotacaoTipoArg, Id idArg, Expressao expressaoArg) {
-		anotacaoTipo = anotacaoTipoArg;
+	public DecTipo(Id idArg, TipoCustom tipoCustom) {
 		id = idArg;
-		expressao = expressaoArg;
+		this.tipoCustom = tipoCustom;
 	}
 
 	/**
@@ -32,11 +23,7 @@ public class DecVariavel implements DeclaracaoFuncional {
 	 */
 	@Override
 	public String toString() {
-		return String.format("var %s %s = %s", anotacaoTipo, id, expressao);
-	}
-
-	public Expressao getExpressao() {
-		return expressao;
+		return String.format("tipo %s = %s", id, tipoCustom);
 	}
 
 	public Id getId() {
@@ -58,9 +45,9 @@ public class DecVariavel implements DeclaracaoFuncional {
 	 *                no mesmo bloco do ambiente.
 	 * @precondition this.checaTipo(amb);
 	 */
-	public Tipo getTipo(AmbienteCompilacao amb)
+	public TipoCustom getTipo()
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return anotacaoTipo.getTipo();
+		return tipoCustom;
 	}
 
 	/**
@@ -78,15 +65,15 @@ public class DecVariavel implements DeclaracaoFuncional {
 	 */
 	public boolean checaTipo(AmbienteCompilacao ambiente)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return expressao.checaTipo(ambiente);
+		return tipoCustom.eValido();
 	}
 
-	public DecVariavel clone() {
-		return new DecVariavel(this.anotacaoTipo.clone(), this.id.clone(), this.expressao.clone());
+	public DecTipo clone() {
+		return new DecTipo(this.id.clone(), this.tipoCustom.clone());
 	}
 
 	public void elabora(AmbienteCompilacao amb, AmbienteCompilacao aux) throws VariavelJaDeclaradaException {
-		aux.map(getId(), getTipo(amb));
+		aux.map(getId(), getTipo());
 	}
 
 	public void incluir(AmbienteCompilacao amb, AmbienteCompilacao aux) throws VariavelJaDeclaradaException {
@@ -94,7 +81,7 @@ public class DecVariavel implements DeclaracaoFuncional {
 	}
 
 	public void elabora(AmbienteExecucaoFuncional amb, AmbienteExecucaoFuncional aux) throws VariavelJaDeclaradaException {
-		aux.map(getId(), getExpressao().avaliar(amb));
+		aux.map(getId(), getTipo());
 	}
 
 	public void incluir(AmbienteExecucaoFuncional amb, AmbienteExecucaoFuncional aux) throws VariavelJaDeclaradaException {

@@ -1,4 +1,4 @@
-package lf1.plp.functional1.declaration;
+package lf1.plp.expressions2.declaration;
 
 
 import java.util.Map;
@@ -10,17 +10,15 @@ import lf1.plp.expressions2.expression.Valor;
 import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
+import lf1.plp.functional1.declaration.DeclaracaoFuncional;
 import lf1.plp.functional1.memory.AmbienteExecucaoFuncional;
-import lf1.plp.functional1.util.AnotacaoTipo;
 import lf1.plp.functional1.util.DefFuncao;
 
 public class DecVariavel implements DeclaracaoFuncional {
-	private AnotacaoTipo anotacaoTipo;
 	private Id id;
 	private Expressao expressao;
 
-	public DecVariavel(AnotacaoTipo anotacaoTipoArg, Id idArg, Expressao expressaoArg) {
-		anotacaoTipo = anotacaoTipoArg;
+	public DecVariavel(Id idArg, Expressao expressaoArg) {
 		id = idArg;
 		expressao = expressaoArg;
 	}
@@ -32,7 +30,7 @@ public class DecVariavel implements DeclaracaoFuncional {
 	 */
 	@Override
 	public String toString() {
-		return String.format("var %s %s = %s", anotacaoTipo, id, expressao);
+		return String.format("var %s = %s", id, expressao);
 	}
 
 	public Expressao getExpressao() {
@@ -60,7 +58,7 @@ public class DecVariavel implements DeclaracaoFuncional {
 	 */
 	public Tipo getTipo(AmbienteCompilacao amb)
 			throws VariavelNaoDeclaradaException, VariavelJaDeclaradaException {
-		return anotacaoTipo.getTipo();
+		return expressao.getTipo(amb);
 	}
 
 	/**
@@ -82,7 +80,7 @@ public class DecVariavel implements DeclaracaoFuncional {
 	}
 
 	public DecVariavel clone() {
-		return new DecVariavel(this.anotacaoTipo.clone(), this.id.clone(), this.expressao.clone());
+		return new DecVariavel(this.id.clone(), this.expressao.clone());
 	}
 
 	public void elabora(AmbienteCompilacao amb, AmbienteCompilacao aux) throws VariavelJaDeclaradaException {

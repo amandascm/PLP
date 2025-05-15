@@ -26,6 +26,7 @@ import lf1.plp.functional1.parser.Func1Parser;
 // //import loo1.plp.orientadaObjetos1.expressao.valor.ValorConcreto;
 // import loo1.plp.orientadaObjetos1.parser.OO1Parser;
 // import loo2.plp.orientadaObjetos2.parser.OO2Parser;
+import lf1.plp.functional1.Programa;
 
 public class MultiInterpretador {
 

@@ -33,6 +33,13 @@ import lf1.plp.expressions2.expression.ValorInteiro;
 import lf1.plp.expressions2.expression.ValorString;
 import java.util.Map;
 import java.util.AbstractMap;
+import lf1.plp.functional1.util.TipoCustom;
+import lf1.plp.expressions1.util.TipoPrimitivo;
+import lf1.plp.functional1.expression.ExpTypeOf;
+import lf1.plp.expressions1.util.Tipo;
+import lf1.plp.functional1.util.AnotacaoTipo;
+import lf1.plp.functional1.Programa;
+
 
 public class Func1Parser
 {
@@ -170,6 +177,13 @@ TOKEN : /* TOKENS DE FUNCIONAL 1 */
 | < TYPEOF : "typeof" >
 }
 
+TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
+{
+  < INT : "int" >
+| < BOOLEAN : "boolean" >
+| < STRING : "string" >
+}
+
 TOKEN : /* LITERALS */
 {
   < INTEGER_LITERAL :
@@ -247,13 +261,6 @@ TOKEN : /* OPERATORS */
 | < REM : "%" >
 }
 
-TOKEN : /* TOKENS DOS POSS�VEIS TIPOS */
-{
-  < INT : "int" >
-| < BOOLEAN : "boolean" >
-| < STRING : "string" >
-}
-
 Programa Input() :
 {
   Programa retorno;
@@ -266,63 +273,114 @@ Programa Input() :
 }
 
 /**
- * Tipo ::= TipoUniao | TipoPrimitivo
+ * AnotacaoTipo ::= TipoPrimitivo | TipoCustom
  **/
-Tipo PTipo() :
+ /*
+AnotacaoTipo PAnotacaoTipo() :
 {
   Tipo tipo;
 }
 {
-  (
-    tipo = PTipoPrimitivo()
-  | tipo = PTipoUniao()
-  )
+  LOOKAHEAD(PTipoPrimitivo() < BIT_OR >)
+  tipo = PTipoCustom()
   {
-    return tipo;
+    return new AnotacaoTipo(tipo);
+  }
+  |
+  tipo = PTipoPrimitivo()
+  {
+    return new AnotacaoTipo(tipo);
+  }
+}
+*/
+
+/**
+ * AnotacaoTipo ::= TipoPrimitivo | TipoCustom
+ **/
+AnotacaoTipo PAnotacaoTipo() :
+{
+  Tipo tipo;
+}
+{
+    (
+      LOOKAHEAD(< INT > < BIT_OR >)
+      tipo = PTipoCustom()
+      |
+      LOOKAHEAD(< BOOLEAN > < BIT_OR >)
+      tipo = PTipoCustom()
+      |
+      LOOKAHEAD(< STRING > < BIT_OR >)
+      tipo = PTipoCustom()
+      |
+      tipo = PTipoPrimitivo()
+    )
+  {
+    return new AnotacaoTipo(tipo);
   }
 }
 
-/**
- * TipoUniao ::= TipoPrimitivo "|" TipoUniao | TipoPrimitivo "|" TipoPrimitivo
- **/
-Tipo PTipoUniao() :
+TipoCustom PTipoCustom() :
 {
-  Tipo tipoPrim;
-  Tipo tipo2;
-  Tipo retorno;
+  TipoPrimitivo tipoPrim;
+  TipoPrimitivo tipo2;
 }
 {
-  (
-    tipoPrim = PTipoPrimitivo() <BIT_OR> tipo2 = PTipoUniao()
-  |
-    tipoPrim = PTipoPrimitivo() <BIT_OR> tipo2 = PTipoPrimitivo()
-  ) {
-      return new TipoUniao(tipoPrim, tipo2);
-    }
+  tipoPrim = PTipoPrimitivo() < BIT_OR > tipo2 = PTipoPrimitivo()
+  {
+    return new TipoCustom(tipoPrim, tipo2);
+  }
 }
 
 /**
  * TipoPrimitivo ::= "string" | "int" | "boolean"
  **/
-Tipo PTipoPrimitivo() :
+ /*
+TipoPrimitivo PTipoPrimitivo() :
 {
-  Tipo retorno;
+  TipoPrimitivo retorno;
 }
 {
   (
     LOOKAHEAD(< INT >)
     < INT >
     {
-      retorno = TipoPrimitivo.TIPO_INTEIRO;
+      retorno = TipoPrimitivo.INTEIRO;
     }
   | LOOKAHEAD(< BOOLEAN >)
     < BOOLEAN >
     {
-      retorno = TipoPrimitivo.TIPO_BOOLEANO;
+      retorno = TipoPrimitivo.BOOLEANO;
     }
   | < STRING >
     {
-      retorno = TipoPrimitivo.TIPO_STRING;
+      retorno = TipoPrimitivo.STRING;
+    }
+  )
+  {
+    return retorno;
+  }
+}
+*/
+
+TipoPrimitivo PTipoPrimitivo() :
+{
+  TipoPrimitivo retorno;
+}
+{
+  (
+    < INT >
+    {
+      retorno = TipoPrimitivo.INTEIRO;
+    }
+    |
+    < BOOLEAN >
+    {
+      retorno = TipoPrimitivo.BOOLEANO;
+    }
+    |
+    < STRING >
+    {
+      retorno = TipoPrimitivo.STRING;
     }
   )
   {
@@ -428,7 +486,7 @@ Expressao PExpTypeof() :
 {
   < TYPEOF > retorno = PExpPrimaria()
   {
-    return new ExpTypeof(retorno);
+    return new ExpTypeOf(retorno);
   }
 }
 
@@ -467,22 +525,22 @@ Expressao PExpPrimaria() :
 
 List PListaId() :
 {
-  List <Map.Entry<Tipo, Id>> retorno = null;
-  Tipo tipo;
+  List <Map.Entry<AnotacaoTipo, Id>> retorno = null;
+  AnotacaoTipo tipo;
   Id id;
 }
 {
   (
-    tipo = PTipo() id = PId()
+    tipo = PAnotacaoTipo() id = PId()
     {
       if (retorno == null)
       {
-        retorno = new ArrayList<Map.Entry<Tipo, Id>>();
-        retorno.add(new AbstractMap.SimpleEntry<Tipo, Id>(tipo, id));
+        retorno = new ArrayList<Map.Entry<AnotacaoTipo, Id>>();
+        retorno.add(new AbstractMap.SimpleEntry<AnotacaoTipo, Id>(tipo, id));
       }
       else
       {
-        retorno.add(new AbstractMap.SimpleEntry<Tipo, Id>(tipo, id));
+        retorno.add(new AbstractMap.SimpleEntry<AnotacaoTipo, Id>(tipo, id));
       }
     }
   )*
@@ -492,18 +550,18 @@ List PListaId() :
 }
 
 /**
-* DecVariavel ::= Tipo Id "=" Expressao
+* DecVariavel ::= AnotacaoTipo Id "=" Expressao
 **/
 DeclaracaoFuncional PDeclVar() :
 {
-  Tipo tipo;
+  AnotacaoTipo tipo;
   Id id;
   Expressao expressao;
   DeclaracaoFuncional retorno;
 }
 {
   (
-    tipo = PTipo() id = PId() < ASSIGN > expressao = PExpressao()
+    tipo = PAnotacaoTipo() id = PId() < ASSIGN > expressao = PExpressao()
   )
   {
     return new DecVariavel(tipo, id, expressao);
@@ -512,7 +570,7 @@ DeclaracaoFuncional PDeclVar() :
 
 DeclaracaoFuncional PDeclFuncao() :
 {
-  Tipo tipo;
+  AnotacaoTipo tipo;
   Id id;
   Expressao expressao;
   DeclaracaoFuncional retorno;
@@ -520,7 +578,7 @@ DeclaracaoFuncional PDeclFuncao() :
 }
 {
   (
-    < FUNC > Tipo = PTipo() id = PId() lista = PListaId() < ASSIGN > expressao = PExpressao()
+    < FUNC > tipo = PAnotacaoTipo() id = PId() lista = PListaId() < ASSIGN > expressao = PExpressao()
   )
   {
     return new DecFuncao(tipo, id, lista, expressao);
@@ -568,6 +626,7 @@ Expressao PExpDeclaracao() :
 {
   < LET > declaracoes = PDeclFuncional() < IN > expressao = PExpressao()
   {
+    System.out.println("PExpDeclaracao=" + declaracoes);
     return new ExpDeclaracao(declaracoes, expressao);
   }
 }
@@ -623,7 +682,7 @@ Expressao PExpUnaria() :
     retorno = PExpLength()
   | LOOKAHEAD(PExpTypeof())
     retorno = PExpTypeof()
-  | LOOKAHEAD(PExpDeclaracao())
+  | LOOKAHEAD(< LET >)
     retorno = PExpDeclaracao()
   | LOOKAHEAD(PExpCondicional())
     retorno = PExpCondicional()
@@ -633,7 +692,7 @@ Expressao PExpUnaria() :
     retorno = PExpPrimaria()
   )
   {
-    //System.out.println("ExpressaoUnaria=" + retorno);
+    System.out.println("ExpressaoUnaria=" + retorno);
     return retorno;
   }
 }

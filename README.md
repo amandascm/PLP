@@ -45,13 +45,13 @@ Com base nos princípios de flexibilidade e generalização, vamos adicionar tip
     | [**DecFuncao**](Funcional1/src/lf1/plp/functional1/declaration/DecFuncao.java)  
     | [**DecComposta**](Funcional1/src/lf1/plp/functional1/declaration/DecComposta.java)
 
-**DecVariavel** ::= Tipo Id "=" Expressao
+**DecVariavel** ::= AnotacaoTipo Id "=" Expressao
 
 **DecFuncao** ::= "fun" **ListId** "=" **Expressao**
 
 **DecComposta** ::= **DeclaracaoFuncional** "," **DeclaracaoFuncional**
 
-**ListId** ::= Tipo **Id** | Tipo **Id ListId**
+**ListId** ::= AnotacaoTipo **Id** | AnotacaoTipo **Id ListId**
 
 **Aplicacao** ::= **Id** "(" **ListExp** ")"
 
@@ -59,9 +59,8 @@ Com base nos princípios de flexibilidade e generalização, vamos adicionar tip
 
 **IfThenElse** ::= "if" **Expressao** "then" **Expressao** "else" **Expressao**
 
-**Tipo** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) | TipoUniao
+**AnotacaoTipo** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) | TipoCustom
 
-**TipoUniao** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) "|" TipoUniao 
-    | TipoPrimitivo "|" TipoPrimitivo
+**TipoCustom** ::= [TipoPrimitivo](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java) "|" TipoPrimitivo
 
 **TipoPrimitivo** ::= ["string" | "int" | "boolean"](Funcional1/src/lf1/plp/expressions1/util/TipoPrimitivo.java)

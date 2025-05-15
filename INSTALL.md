@@ -9,6 +9,6 @@ Esse projeto foi atualizado para utilizar o Maven como framework de gerenciament
 
 ## Executando o projeto
 
-- Na raiz do projeto do github, rodar: `mvn package`
+- Na raiz do projeto do github, rodar: `mvn package` (é recomendável apagar as pastas target)
   - Vai buildar todos os projetos de acordo com o pom.xml
 - Para executar o interpretador, rodar `java -jar Applet/target/Applet-0.0.1-jar-with-dependencies.jar`

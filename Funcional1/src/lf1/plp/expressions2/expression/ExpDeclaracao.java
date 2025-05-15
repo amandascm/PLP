@@ -10,7 +10,7 @@ import lf1.plp.expressions2.memory.AmbienteCompilacao;
 import lf1.plp.expressions2.memory.AmbienteExecucao;
 import lf1.plp.expressions2.memory.VariavelJaDeclaradaException;
 import lf1.plp.expressions2.memory.VariavelNaoDeclaradaException;
-import lf1.plp.functional1.declaration.DecVariavel;
+import lf1.plp.expressions2.declaration.DecVariavel;
 
 public class ExpDeclaracao implements Expressao {
 
